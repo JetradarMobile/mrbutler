@@ -6,8 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-// Mr. Butler
-class RxPermissions(
+class MrButler(
     private val permissionsHandler: PermissionsHandler,
     private val logger: (String) -> Unit = {}
 ) {
