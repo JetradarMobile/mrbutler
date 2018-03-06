@@ -4,6 +4,29 @@ MrButler
 Reactive Android App Permissions API
 
 
+Download
+--------
+
+Add it in your root build.gradle at the end of repositories:
+
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+
+Add the dependency
+
+```groovy
+dependencies {
+    compile 'com.github.jetradarmobile:mrbutler:1.0.0'
+}
+```
+
+
 License
 -------
 
