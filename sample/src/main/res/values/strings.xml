@@ -1,0 +1,8 @@
+<resources>
+
+  <string name="app_name">Mr. Butler</string>
+  <string name="button_request_location_permission">Request location permission</string>
+  <string name="toast_location_permission_granted">Location permission was granted :)</string>
+  <string name="toast_location_permission_denied">Location permission was denied :(</string>
+
+</resources>
