@@ -28,7 +28,7 @@ abstract class PermissionsDelegate<in T : Any> : PermissionsHandler {
   private var componentRef: WeakReference<T>? = null
 
   private val attachComponentStream = PublishRelay.create<T>()
-  private val requestPermissionResultSubjects = mutableMapOf<String, SingleSubject<PermissionInfo>>()
+  private val requestPermissionResultSubjects = mutableMapOf<String, SingleSubject<PermissionCheckResult>>()
 
   abstract fun isPermissionGranted(component: T, permission: String): Boolean
   abstract fun isPermissionRevoked(component: T, permission: String): Boolean
@@ -45,27 +45,24 @@ abstract class PermissionsDelegate<in T : Any> : PermissionsHandler {
     componentRef = null
   }
 
-  override fun checkPermissions(vararg permissions: String): Observable<PermissionInfo> = component().flattenAsObservable { component ->
+  override fun checkPermissions(vararg permissions: String): Observable<PermissionCheckResult> = component().flattenAsObservable { component ->
     permissions.map { permission ->
-      PermissionInfo(
-          name = permission,
-          isGranted = isPermissionGranted(component, permission),
-          shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale(component, permission)
-      )
+      if (isPermissionGranted(component, permission)) PermissionGranted(permission)
+      else PermissionDenied(permission, shouldShowRequestPermissionRationale(component, permission))
     }
   }
 
   @Suppress("CascadeIf")
   @SuppressLint("CheckResult")
-  override fun requestPermissions(vararg permissions: String): Observable<PermissionInfo> = component().flatMapObservable { component ->
+  override fun requestPermissions(vararg permissions: String): Observable<PermissionCheckResult> = component().flatMapObservable { component ->
     val unrequestedPermissions = mutableListOf<String>()
     val requestPermissionResults = permissions.map { permission ->
       if (isPermissionGranted(component, permission)) {
-        Single.just(PermissionInfo(name = permission, isGranted = true, shouldShowRequestPermissionRationale = false))
+        Single.just(PermissionGranted(permission))
       } else if (isPermissionRevoked(component, permission)) {
-        Single.just(PermissionInfo(name = permission, isGranted = false, shouldShowRequestPermissionRationale = false))
+        Single.just(PermissionDenied(permission, shouldShowRequestPermissionRationale = false))
       } else {
-        requestPermissionResultSubjects[permission] ?: SingleSubject.create<PermissionInfo>().also {
+        requestPermissionResultSubjects[permission] ?: SingleSubject.create<PermissionCheckResult>().also {
           requestPermissionResultSubjects[permission] = it
           unrequestedPermissions.add(permission)
         }
@@ -82,11 +79,11 @@ abstract class PermissionsDelegate<in T : Any> : PermissionsHandler {
     permissions.forEachIndexed { index, permission ->
       val resultSubject = checkNotNull(requestPermissionResultSubjects.remove(permission)) { "Could not find corresponding result subject" }
       val component = checkNotNull(componentRef?.get()) { "Component not attached" }
-      resultSubject.onSuccess(PermissionInfo(
-          name = permission,
-          isGranted = grantResults[index] == PackageManager.PERMISSION_GRANTED,
-          shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale(component, permission)
-      ))
+      val isPermissionGranted = grantResults[index] == PackageManager.PERMISSION_GRANTED
+      resultSubject.onSuccess(
+          if (isPermissionGranted) PermissionGranted(permission)
+          else PermissionDenied(permission, shouldShowRequestPermissionRationale(component, permission))
+      )
     }
   }
 

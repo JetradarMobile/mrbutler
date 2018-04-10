@@ -16,4 +16,4 @@
 
 package com.jetradar.permissions
 
-class PermissionsDeniedException(message: String? = null) : RuntimeException(message)
+class PermissionsDeniedException(message: String) : RuntimeException(message)

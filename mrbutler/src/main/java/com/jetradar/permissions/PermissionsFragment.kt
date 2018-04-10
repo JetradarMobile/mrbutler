@@ -48,7 +48,6 @@ class PermissionsFragment : Fragment(), PermissionsHandler {
   override fun checkPermissions(vararg permissions: String) =
       permissionsDelegate.checkPermissions(*permissions)
 
-  @Suppress("CascadeIf")
   override fun requestPermissions(vararg permissions: String) =
       permissionsDelegate.requestPermissions(*permissions)
 

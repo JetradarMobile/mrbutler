@@ -17,18 +17,14 @@
 package com.jetradar.permissions
 
 import android.annotation.SuppressLint
-import android.support.v4.app.FragmentActivity
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
 class MrButler(
     private val permissionsHandler: PermissionsHandler,
-    private val logger: (String) -> Unit = {}
+    private val logger: ((message: String) -> Unit)? = null
 ) {
-
-  constructor(activity: FragmentActivity, logger: (String) -> Unit = {}) :
-      this(permissionsHandler = PermissionsFragment.with(activity), logger = logger)
 
   fun require(vararg permissions: String): Completable =
       require(shouldRequestPermissions = true, permissions = *permissions)
@@ -37,8 +33,8 @@ class MrButler(
   fun require(shouldRequestPermissions: Boolean, vararg permissions: String): Completable =
       (if (shouldRequestPermissions) requestEach(*permissions) else checkEach(*permissions))
           .toList()
-          .flatMapCompletable { permissionInfo ->
-            val deniedPermissions = permissionInfo.filterNot { it.isGranted }
+          .flatMapCompletable { permissionCheckResults ->
+            val deniedPermissions = permissionCheckResults.filterIsInstance<PermissionDenied>()
             if (deniedPermissions.isEmpty()) {
               Completable.complete()
             } else {
@@ -48,21 +44,28 @@ class MrButler(
 
   fun check(vararg permissions: String): Single<Boolean> = checkEach(*permissions)
       .toList()
-      .map { permissionInfo -> permissionInfo.all { it.isGranted } }
+      .map { permissionCheckResults -> permissionCheckResults.all { it is PermissionGranted } }
 
-  fun checkEach(vararg permissions: String): Observable<PermissionInfo> {
-    logger.invoke("Check ${permissions.joinToString()}")
+  fun checkSingle(permission: String): Single<PermissionCheckResult> =
+      checkEach(permission).singleOrError()
+
+  fun checkEach(vararg permissions: String): Observable<PermissionCheckResult> {
+    logger?.invoke("Check ${permissions.joinToString()}")
     return permissionsHandler.checkPermissions(*permissions)
-        .doOnNext { permissionInfo -> logger.invoke("$permissionInfo") }
+        .doOnNext { permissionCheckResult -> logger?.invoke("$permissionCheckResult") }
   }
 
-  fun request(vararg permissions: String): Single<Boolean> = requestEach(*permissions)
-      .toList()
-      .map { permissionInfo -> permissionInfo.all { it.isGranted } }
+  fun request(vararg permissions: String): Single<Boolean> =
+      requestEach(*permissions)
+          .toList()
+          .map { permissionCheckResults -> permissionCheckResults.all { it is PermissionGranted } }
 
-  fun requestEach(vararg permissions: String): Observable<PermissionInfo> {
-    logger.invoke("Request ${permissions.joinToString()}")
+  fun requestSingle(permission: String): Single<PermissionCheckResult> =
+      requestEach(permission).singleOrError()
+
+  fun requestEach(vararg permissions: String): Observable<PermissionCheckResult> {
+    logger?.invoke("Request ${permissions.joinToString()}")
     return permissionsHandler.requestPermissions(*permissions)
-        .doOnNext { permissionInfo -> logger.invoke("$permissionInfo") }
+        .doOnNext { permissionCheckResult -> logger?.invoke("$permissionCheckResult") }
   }
 }

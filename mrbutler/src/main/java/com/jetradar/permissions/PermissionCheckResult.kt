@@ -16,8 +16,15 @@
 
 package com.jetradar.permissions
 
-data class PermissionInfo(
-    val name: String,
-    val isGranted: Boolean,
+sealed class PermissionCheckResult {
+  abstract val permission: String
+}
+
+data class PermissionGranted(
+    override val permission: String
+) : PermissionCheckResult()
+
+data class PermissionDenied(
+    override val permission: String,
     val shouldShowRequestPermissionRationale: Boolean
-)
+) : PermissionCheckResult()

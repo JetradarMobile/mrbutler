@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import com.jetradar.permissions.MrButler
+import com.jetradar.permissions.mrButler
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.requestLocationPermissionButton
 
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun requestLocationPermission() {
-    disposables.add(MrButler(this).request(Manifest.permission.ACCESS_FINE_LOCATION)
+    disposables.add(mrButler(this).request(Manifest.permission.ACCESS_FINE_LOCATION)
         .subscribe(
             { granted ->
               if (granted) {

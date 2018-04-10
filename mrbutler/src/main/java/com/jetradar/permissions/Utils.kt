@@ -19,7 +19,11 @@ package com.jetradar.permissions
 import android.content.Context
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.PermissionChecker
+
+inline fun mrButler(activity: FragmentActivity, noinline logger: ((message: String) -> Unit)? = null) =
+    MrButler(permissionsHandler = PermissionsFragment.with(activity), logger = logger)
 
 internal fun Context.isPermissionGranted(permission: String) =
     PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
