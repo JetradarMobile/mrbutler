@@ -19,8 +19,8 @@ package com.jetradar.permissions
 import android.content.Context
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.PermissionChecker
+import androidx.core.content.PermissionChecker
+import androidx.fragment.app.FragmentActivity
 
 inline fun mrButler(activity: FragmentActivity, noinline logger: ((message: String) -> Unit)? = null) =
     MrButler(permissionsHandler = PermissionsFragment.with(activity), logger = logger)

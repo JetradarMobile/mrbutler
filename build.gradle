@@ -1,12 +1,12 @@
 buildscript {
   ext.versions = [
-      'compileSdk'    : 27,
-      'minSdk'        : 14,
+      'compileSdk': 28,
+      'minSdk'    : 14,
 
-      'kotlin'        : '1.2.31',
-      'rxjava'        : '2.1.12',
-      'rxrelay'       : '2.0.0',
-      'supportLibrary': '27.1.1'
+      'kotlin'    : '1.2.71',
+      'rxjava'    : '2.2.2',
+      'rxrelay'   : '2.0.0',
+      'androidX'  : '1.0.0'
   ]
 
   repositories {
@@ -15,7 +15,7 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:3.1.1"
+    classpath "com.android.tools.build:gradle:3.2.1"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
   }
 }

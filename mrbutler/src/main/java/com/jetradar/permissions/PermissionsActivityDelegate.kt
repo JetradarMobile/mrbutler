@@ -17,7 +17,7 @@
 package com.jetradar.permissions
 
 import android.app.Activity
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 
 class PermissionsActivityDelegate : PermissionsDelegate<Activity>() {
 
