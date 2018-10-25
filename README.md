@@ -6,6 +6,16 @@ MrButler
 
 Reactive Android App Permissions API
 
+| API | Description |
+|-------------------------------------------|--------------------------------------------------------|
+| `request(vararg permissions: String)`     | emit `true` if all requested permissions granted       |
+| `requestSingle(permission: String)`       | emit result of permission request                      |
+| `requestEach(vararg permissions: String)` | emit results for each permission request               |
+| `check(vararg permissions: String)`       | emit `true` if all permissions already granted         |
+| `checkSingle(permission: String)`         | emit result of availability check permission           |
+| `checkEach(vararg permissions: String)`   | emit result of availability check  each permission     |
+| `require(vararg permissions: String)`     | emit `PermissionsDeniedException` if permission denied |
+
 
 Download
 --------
@@ -27,6 +37,18 @@ Add the dependency
 dependencies {
     compile 'com.github.jetradarmobile:mrbutler:1.0.2'
 }
+```
+
+
+Usage
+-----
+
+Request LOCATION permission
+
+```kotlin 
+mrButler(activity)
+    .request(Manifest.permission.ACCESS_FINE_LOCATION)
+    .subscribe { granted -> ... }
 ```
 
 
