@@ -2,6 +2,13 @@ Change Log
 ==========
 
 
+## Version 1.0.2
+
+_2018-10-25_
+
+ * Migrate to AndroidX.
+
+
 ## Version 1.0.1
 
 _2018-04-10_
