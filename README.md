@@ -4,7 +4,7 @@ MrButler
 [![Release](https://jitpack.io/v/jetradarmobile/mrbutler.svg)](https://jitpack.io/#jetradarmobile/mrbutler)
 [![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
 
-Reactive Android App Permissions API
+Reactive Android App Permissions API with delegates and logging.
 
 | API | Description |
 |-------------------------------------------|--------------------------------------------------------|
@@ -47,6 +47,60 @@ Request LOCATION permission
 
 ```kotlin 
 mrButler(activity)
+    .request(Manifest.permission.ACCESS_FINE_LOCATION)
+    .subscribe { granted -> ... }
+```
+
+A feature of this implementation is `Delegates`. Using delegates you can request permission anywhere.
+
+Initialize MrButler
+
+```kotlin
+class App : Application() {
+  val permissionsActivityDelegate = PermissionsActivityDelegate()
+  val mrButler = MrButler(permissionsActivityDelegate) { message ->
+    Log.i("Permissions", message)
+  }
+
+  override fun onCreate() {
+    super.onCreate()
+    instance = this
+  }
+
+  companion object {
+    lateinit var instance: App
+  }
+}
+```
+
+Associate the permissions delegate with activity
+
+```kotlin
+class MainActivity : AppCompatActivity() {
+  private val permissionsDelegate = App.instance.permissionsActivityDelegate
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    permissionsDelegate.attach(this)
+    // ...
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    permissionsDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults)
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    permissionsDelegate.detach()
+  }
+}
+```
+
+Request permissions anywhere
+
+```kotlin
+App.instance.mrButler
     .request(Manifest.permission.ACCESS_FINE_LOCATION)
     .subscribe { granted -> ... }
 ```
