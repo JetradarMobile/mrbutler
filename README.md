@@ -4,6 +4,7 @@ MrButler
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-MrButler-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/7263)
 [![Release](https://jitpack.io/v/jetradarmobile/mrbutler.svg)](https://jitpack.io/#jetradarmobile/mrbutler)
 [![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
+[![AndroidWeekly](https://img.shields.io/badge/Android%20Weekly-%23333-blue.svg?style=flat)](http://androidweekly.net/issues/issue-333)
 
 Reactive Android App Permissions API with delegates and logging.
 
