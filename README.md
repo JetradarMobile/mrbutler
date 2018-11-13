@@ -37,7 +37,7 @@ Add the dependency
 
 ```groovy
 dependencies {
-    compile 'com.github.jetradarmobile:mrbutler:1.0.2'
+    compile 'com.github.jetradarmobile:mrbutler:1.0.3'
 }
 ```
 

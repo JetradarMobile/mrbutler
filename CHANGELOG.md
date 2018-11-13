@@ -2,6 +2,13 @@ Change Log
 ==========
 
 
+## Version 1.0.3
+
+_2018-11-13_
+
+ * Fixed crash if could not find result subject for permission.
+
+
 ## Version 1.0.2
 
 _2018-10-25_

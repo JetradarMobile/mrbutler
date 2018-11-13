@@ -18,6 +18,7 @@ package com.jetradar.permissions
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.util.Log
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -77,7 +78,11 @@ abstract class PermissionsDelegate<in T : Any> : PermissionsHandler {
   fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
     if (requestCode != PERMISSIONS_REQUEST_CODE) return
     permissions.forEachIndexed { index, permission ->
-      val resultSubject = checkNotNull(requestPermissionResultSubjects.remove(permission)) { "Could not find corresponding result subject" }
+      val resultSubject = requestPermissionResultSubjects.remove(permission)
+      if (resultSubject == null) {
+        Log.e("MrButler", "Could not find result subject for $permission")
+        return@forEachIndexed
+      }
       val component = checkNotNull(componentRef?.get()) { "Component not attached" }
       val isPermissionGranted = grantResults[index] == PackageManager.PERMISSION_GRANTED
       resultSubject.onSuccess(
