@@ -9,14 +9,14 @@ MrButler
 Reactive Android App Permissions API with delegates and logging.
 
 | API | Description |
-|-------------------------------------------|--------------------------------------------------------|
-| `request(vararg permissions: String)`     | emit `true` if all requested permissions granted       |
-| `requestSingle(permission: String)`       | emit result of permission request                      |
-| `requestEach(vararg permissions: String)` | emit results for each permission request               |
-| `check(vararg permissions: String)`       | emit `true` if all permissions already granted         |
-| `checkSingle(permission: String)`         | emit result of availability check permission           |
-| `checkEach(vararg permissions: String)`   | emit result of availability check  each permission     |
-| `require(vararg permissions: String)`     | emit `PermissionsDeniedException` if permission denied |
+|-------------------------------------------|---------------------------------------------------------|
+| `request(vararg permissions: String)`     | emit `true` if all requested permissions granted        |
+| `requestSingle(permission: String)`       | emit result of permission request                       |
+| `requestEach(vararg permissions: String)` | emit results for each permission request                |
+| `check(vararg permissions: String)`       | emit `true` if all permissions already granted          |
+| `checkSingle(permission: String)`         | emit result of availability check permission            |
+| `checkEach(vararg permissions: String)`   | emit result of availability check  each permission      |
+| `require(vararg permissions: String)`     | throw `PermissionsDeniedException` if permission denied |
 
 
 Download
